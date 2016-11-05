@@ -94,12 +94,15 @@ colnames(alone.data) <- paste0(colnames(alone.data), '_alone')
 # 10	Not applicable	0	
 # 9	No answer
 #
-schooling.vars <- c('AV42', 'BV62', 'CV63')
+schooling.vars <- c('AV42', 'BV62', 'CV62')
 schooling.data <- all.data[, schooling.vars]
 schooling.data[] <- lapply(schooling.data, factor)
 summary(schooling.data)
-# TODO clean these data using mapping above
-
+schooling.to.meaning <-        c('7- years', '8-9 years', '8-9 years', '10-11 years', '10-11 years', '7- years', '7- years',    NA,  NA,  NA, NA,  NA,    NA)
+names(schooling.to.meaning) <- c('1',        '2'        , '3'        , '4'           , '5'         , '6'       , '7',          '8', '9', '10', NA, '88', '99')
+schooling.data <- apply(schooling.data, c(1,2), function(x) schooling.to.meaning[as.character(x)])
+colnames(schooling.data) <- paste0(colnames(schooling.data), '_schooling')
+summary(schooling.data)
 
 # gender
 gender.vars <- c('AV4', 'BV8', 'CV5')
@@ -137,7 +140,7 @@ birthyear.data <- data.frame(birthyear.data)
 colnames(birthyear.data) <- paste0(colnames(birthyear.data), '_birthyear')
 summary(birthyear.data)
 
-all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, depression.data)
+all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, depression.data, schooling.data)
 summary(all.df)
 gz1 <- gzfile('results/diabetes_cleaned.csv.gz', 'w')
 write.csv(all.df, gz1, row.names = F)
