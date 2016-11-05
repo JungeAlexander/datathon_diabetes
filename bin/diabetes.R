@@ -6,28 +6,33 @@ all.data <- read.csv('data/TheDanishLongitudinalStudyofAgeing_F10.csv')
 
 years <- c(1997, 2002, 2007)
 
-# Has a doctor told you, that you have - or within the past year have had: b. Diabetes. Yes: Do you have daily genes?
-diabetes.difficulties.vars <- c('AV323', 'BV283', 'CV346')
-diab.diff.vars <- unlist(lapply(1:3, function(i) c(diabetes.vars[i], diabetes.difficulties.vars[i])))
-diff.data <- all.data[,diabetes.difficulties.vars]
-diab.diff.data <- all.data[,diab.diff.vars]
-diab.diff.data[] <- lapply(diab.diff.data, factor)
-summary(diab.diff.data)
-
 # Has a doctor told you, that you have or within the past year have had:b. Diabetes?
 diabetes.vars <- c('AV322', 'BV282', 'CV345')
 diab.data <- all.data[,diabetes.vars]
 diab.data[] <- lapply(diab.data, factor)
-# 1	Yes	537	
-# 2 or 5	No	5140	
-# 8	Dont know	2	
-# 9	No answer	0
-# 10	Not applicable	0
 diab.status.to.meaning        <- c('Y', 'N', 'N', NA,  NA,  NA)
 names(diab.status.to.meaning) <- c('1', '2', '5', '8', '9', NA)
 diab.data <- apply(diab.data, c(1,2), function(x) diab.status.to.meaning[as.character(x)])
 colnames(diab.data) <- paste0(colnames(diab.data), '_diab')
 summary(diab.data)
+
+# Has a doctor told you, that you have - or within the past year have had: b. Diabetes. Yes: Do you have daily genes?
+diabdiff.vars <- c('AV323', 'BV283', 'CV346')
+diabdiff.data <- all.data[,diabdiff.vars]
+diabdiff.data[] <- lapply(diabdiff.data, factor)
+summary(diabdiff.data)
+diabdiff.av323.to.meaning        <- c('Y', 'N', NA, NA)
+names(diabdiff.av323.to.meaning) <- c('1', '2', '9', '10')
+diabdiff.bv283.to.meaning        <- c('Y', 'N', NA,  NA, NA)
+names(diabdiff.bv283.to.meaning) <- c('1', '2', '8', '9', '10')
+diabdiff.cv346.to.meaning        <- c('Y', 'N', NA,  NA, NA)
+names(diabdiff.cv346.to.meaning) <- c('1', '5', '8', '9', '10')
+diabdiff.data <- t(apply(diabdiff.data, 1, function(r) c(diabdiff.av323.to.meaning[r[1]],
+                                                           diabdiff.bv283.to.meaning[r[2]],
+                                                           diabdiff.cv346.to.meaning[r[3]])))
+diabdiff.data <- data.frame(diabdiff.data)
+colnames(diabdiff.data) <- paste0(colnames(diabdiff.data), '_diabdiff')
+summary(diabdiff.data)
 
 # Are there sometimes situations, that you are alone, although you really want to be in the company of others?
 alone.vars <- c('AV263', 'BV256', 'CV317')
@@ -85,13 +90,38 @@ healthstat.vars <- c('AV317', 'BV277', 'CV340')
 healthstat.data <- all.data[, healthstat.vars]
 healthstat.data[] <- lapply(healthstat.data, factor)
 summary(healthstat.data)
-healthstat.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
-names(healthstat.to.meaning) <- c('1', '2', '3', '4', '5', 8, 9)
-healthstat.data <- apply(healthstat.data, c(1,2), function(x) healthstat.to.meaning[as.character(x)])
-colnames(healthstat.data) <- paste0(colnames(healthstat.data), '_healt')
+healthstat.av317.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA)
+names(healthstat.av317.to.meaning) <- c('1', '2', '3', '4', '5', '9')
+healthstat.bv377.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthstat.bv377.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthstat.cv340.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthstat.cv340.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthstat.data <- t(apply(healthstat.data, 1, function(r) c(healthstat.av317.to.meaning[r[1]],
+                                                           healthstat.bv377.to.meaning[r[2]],
+                                                           healthstat.cv340.to.meaning[r[3]])))
+healthstat.data <- data.frame(healthstat.data)
+colnames(healthstat.data) <- paste0(colnames(healthstat.data), '_health')
 summary(healthstat.data)
 
+#Health estimate compared to others at same age
+healthcompare.vars <- c('AV318', 'BV278', 'CV341')
+healthcompare.data <- all.data[, healthcompare.vars]
+healthcompare.data[] <- lapply(healthcompare.data, factor)
+summary(healthcompare.data)
+healthcompare.av317.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA)
+names(healthcompare.av317.to.meaning) <- c('1', '2', '3', '4', '5', '9')
+healthcompare.bv377.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthcompare.bv377.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthcompare.cv340.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthcompare.cv340.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthcompare.data <- t(apply(healthcompare.data, 1, function(r) c(healthcompare.av318.to.meaning[r[1]],
+                                                           healthcompare.bv378.to.meaning[r[2]],
+                                                           healthcompare.cv341.to.meaning[r[3]])))
+healthcompare.data <- data.frame(healthcompare.data)
+colnames(healthcompare.data) <- paste0(colnames(healthcompare.data), '_healthcomp')
+summary(healthcompare.data)
+
 #------------------------------------------------------
-all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data)
+all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, diabdiff.data, healthstat.data, healthcompare.data)
 summary(all.df)
 write.csv(all.df, 'results/alone_diabetes.csv', row.names = F)
