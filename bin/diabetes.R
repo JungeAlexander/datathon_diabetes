@@ -60,6 +60,47 @@ names(alone.status.to.meaning) <- c('1',    '2',   '3',   '4',  '8',  '9',  NA)
 alone.data <- apply(alone.data, c(1,2), function(x) alone.status.to.meaning[as.character(x)])
 colnames(alone.data) <- paste0(colnames(alone.data), '_alone')
 
+#How many years for schooling do you have?
+# 1997
+#Values	Categories	N
+#1	7 th grade	3049	
+#2	8-9 th grade without examination	558	
+#3	9 th grade with examination (The public school examination,	514	
+#4	10 th grade without examination	45	
+#5	10 th grade with examination (The extended public school exa	1126	
+#6	Grammar school or the like	66	
+#7	Grammar school examination, Higher Preparatory Examination,	476	
+#8	Other schooling	26	
+#88	Dont know	4	
+#
+# 2002
+#1	7. Grade	1229	
+#2	8-9. Grade	433	
+#3	9. Grade with final examination	487	
+#4	10. Grade without final examination	44	
+#5	10. Grade with final examination	826	
+#6	Grammar school or the like	67	
+#7	General Certificate of Education or the like	448	
+#8	Other schooling	24	
+#88	Dont know	6	
+#99	No answer
+#
+# 2007
+# 1	7 or fewer years of schooling	7010	
+# 2	8-9 years of schooling	2623	
+# 4	10-11 years of schooling	0	
+# 5	12+ years of schooling (general Certificate of Education)	0	
+# 8	Dont know	0	
+# 10	Not applicable	0	
+# 9	No answer
+#
+schooling.vars <- c('AV42', 'BV62', 'CV63')
+schooling.data <- all.data[, schooling.vars]
+schooling.data[] <- lapply(schooling.data, factor)
+summary(schooling.data)
+# TODO clean these data using mapping above
+
+
 # gender
 gender.vars <- c('AV4', 'BV8', 'CV5')
 gender.data <- all.data[, gender.vars]
@@ -101,3 +142,7 @@ summary(all.df)
 gz1 <- gzfile('results/diabetes_cleaned.csv.gz', 'w')
 write.csv(all.df, gz1, row.names = F)
 close(gz1)
+
+#library(ggplot2)
+#p <- ggplot(all.df) + aes('AV322_diab')
+#p
