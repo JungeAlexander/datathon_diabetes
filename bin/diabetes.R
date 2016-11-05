@@ -169,12 +169,12 @@ healthcompare.vars <- c('AV318', 'BV278', 'CV341')
 healthcompare.data <- all.data[, healthcompare.vars]
 healthcompare.data[] <- lapply(healthcompare.data, factor)
 summary(healthcompare.data)
-healthcompare.av317.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA)
-names(healthcompare.av317.to.meaning) <- c('1', '2', '3', '4', '5', '9')
-healthcompare.bv377.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
-names(healthcompare.bv377.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
-healthcompare.cv340.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
-names(healthcompare.cv340.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthcompare.av318.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA)
+names(healthcompare.av318.to.meaning) <- c('1', '2', '3', '4', '5', '9')
+healthcompare.bv378.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthcompare.bv378.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
+healthcompare.cv341.to.meaning <-        c('Really good', 'Good', 'Moderately', 'Bad', 'Very Bad',NA,NA)
+names(healthcompare.cv341.to.meaning) <- c('1', '2', '3', '4', '5', '8', '9')
 healthcompare.data <- t(apply(healthcompare.data, 1, function(r) c(healthcompare.av318.to.meaning[r[1]],
                                                            healthcompare.bv378.to.meaning[r[2]],
                                                            healthcompare.cv341.to.meaning[r[3]])))
