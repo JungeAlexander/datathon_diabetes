@@ -34,6 +34,23 @@ diabdiff.data <- data.frame(diabdiff.data)
 colnames(diabdiff.data) <- paste0(colnames(diabdiff.data), '_diabdiff')
 summary(diabdiff.data)
 
+
+# Has a doctor told you, that you have or within the past year have had:b. Depression?
+depression.vars <- c('AV334', 'BV294', 'CV357')
+depression.data <- all.data[,depression.vars]
+depression.data[] <- lapply(depression.data, factor)
+summary(depression.data)
+# Values	Categories	N
+# 1	Yes	721	
+# 5	No	8801	
+# 8	Dont know	42	
+# 9	No answer
+depression.status.to.meaning        <- c('Y', 'N', 'N', NA,  NA,  NA)
+names(depression.status.to.meaning) <- c('1', '2', '5', '8', '9', NA)
+depression.data <- apply(depression.data, c(1,2), function(x) depression.status.to.meaning[as.character(x)])
+colnames(depression.data) <- paste0(colnames(depression.data), '_depression')
+summary(depression.data)
+  
 # Are there sometimes situations, that you are alone, although you really want to be in the company of others?
 alone.vars <- c('AV263', 'BV256', 'CV317')
 alone.data <- all.data[,alone.vars]
@@ -48,6 +65,50 @@ alone.status.to.meaning <-        c('Y', 'Y', 'Y', 'N', NA, NA, NA)
 names(alone.status.to.meaning) <- c('1',    '2',   '3',   '4',  '8',  '9',  NA)
 alone.data <- apply(alone.data, c(1,2), function(x) alone.status.to.meaning[as.character(x)])
 colnames(alone.data) <- paste0(colnames(alone.data), '_alone')
+
+#How many years for schooling do you have?
+# 1997
+#Values	Categories	N
+#1	7 th grade	3049	
+#2	8-9 th grade without examination	558	
+#3	9 th grade with examination (The public school examination,	514	
+#4	10 th grade without examination	45	
+#5	10 th grade with examination (The extended public school exa	1126	
+#6	Grammar school or the like	66	
+#7	Grammar school examination, Higher Preparatory Examination,	476	
+#8	Other schooling	26	
+#88	Dont know	4	
+#
+# 2002
+#1	7. Grade	1229	
+#2	8-9. Grade	433	
+#3	9. Grade with final examination	487	
+#4	10. Grade without final examination	44	
+#5	10. Grade with final examination	826	
+#6	Grammar school or the like	67	
+#7	General Certificate of Education or the like	448	
+#8	Other schooling	24	
+#88	Dont know	6	
+#99	No answer
+#
+# 2007
+# 1	7 or fewer years of schooling	7010	
+# 2	8-9 years of schooling	2623	
+# 4	10-11 years of schooling	0	
+# 5	12+ years of schooling (general Certificate of Education)	0	
+# 8	Dont know	0	
+# 10	Not applicable	0	
+# 9	No answer
+#
+schooling.vars <- c('AV42', 'BV62', 'CV62')
+schooling.data <- all.data[, schooling.vars]
+schooling.data[] <- lapply(schooling.data, factor)
+summary(schooling.data)
+schooling.to.meaning <-        c('7- years', '8-9 years', '8-9 years', '10-11 years', '10-11 years', '7- years', '7- years',    NA,  NA,  NA, NA,  NA,    NA)
+names(schooling.to.meaning) <- c('1',        '2'        , '3'        , '4'           , '5'         , '6'       , '7',          '8', '9', '10', NA, '88', '99')
+schooling.data <- apply(schooling.data, c(1,2), function(x) schooling.to.meaning[as.character(x)])
+colnames(schooling.data) <- paste0(colnames(schooling.data), '_schooling')
+summary(schooling.data)
 
 # gender
 gender.vars <- c('AV4', 'BV8', 'CV5')
@@ -122,6 +183,12 @@ colnames(healthcompare.data) <- paste0(colnames(healthcompare.data), '_healthcom
 summary(healthcompare.data)
 
 #------------------------------------------------------
-all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, diabdiff.data, healthstat.data, healthcompare.data)
+all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, diabdiff.data, healthstat.data, healthcompare.data, depression.data, schooling.data)
 summary(all.df)
-write.csv(all.df, 'results/alone_diabetes.csv', row.names = F)
+gz1 <- gzfile('results/diabetes_cleaned.csv.gz', 'w')
+write.csv(all.df, gz1, row.names = F)
+close(gz1)
+
+#library(ggplot2)
+#p <- ggplot(all.df) + aes('AV322_diab')
+#p
