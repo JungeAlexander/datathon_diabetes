@@ -27,6 +27,22 @@ diab.status.to.meaning        <- c('Y', 'N', 'N', NA,  NA,  NA)
 names(diab.status.to.meaning) <- c('1', '2', '5', '8', '9', NA)
 diab.data <- apply(diab.data, c(1,2), function(x) diab.status.to.meaning[as.character(x)])
 colnames(diab.data) <- paste0(colnames(diab.data), '_diab')
+
+# Has a doctor told you, that you have or within the past year have had:b. Depression?
+depression.vars <- c('AV334', 'BV294', 'CV357')
+depression.data <- all.data[,depression.vars]
+depression.data[] <- lapply(depression.data, factor)
+summary(depression.data)
+# Values	Categories	N
+# 1	Yes	721	
+# 5	No	8801	
+# 8	Dont know	42	
+# 9	No answer
+depression.status.to.meaning        <- c('Y', 'N', 'N', NA,  NA,  NA)
+names(depression.status.to.meaning) <- c('1', '2', '5', '8', '9', NA)
+depression.data <- apply(depression.data, c(1,2), function(x) depression.status.to.meaning[as.character(x)])
+colnames(depression.data) <- paste0(colnames(depression.data), '_depression')
+summary(depression.data)
   
 # Are there sometimes situations, that you are alone, although you really want to be in the company of others?
 alone.vars <- c('AV263', 'BV256', 'CV317')
@@ -80,6 +96,8 @@ birthyear.data <- data.frame(birthyear.data)
 colnames(birthyear.data) <- paste0(colnames(birthyear.data), '_birthyear')
 summary(birthyear.data)
 
-all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data)
+all.df <- cbind.data.frame(study.data, birthyear.data, gender.data, alone.data, diab.data, depression.data)
 summary(all.df)
-write.csv(all.df, 'results/alone_diabetes.csv', row.names = F)
+gz1 <- gzfile('results/diabetes_cleaned.csv.gz', 'w')
+write.csv(all.df, gz1, row.names = F)
+close(gz1)
